@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Booking System</title>
+    <link rel="icon" href="/images/airplane.png">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
+            <a class="text-white text-2xl font-bold mb-4 sm:mb-0" href="/">FlightBooking</a>
+            <% if(token){ %>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/flights">Flights</a>
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/bookings">My Bookings</a>
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users">Users</a>
+            </div>
+            <% } else{%>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users/login">Login</a>
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users/signup">Signup</a>
+            </div>
+            <% } %>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8">
+        <div class="bg-gray-800 text-white p-8 rounded-lg">
+            <h1 class="text-4xl font-bold mb-4">Welcome to FlightBooking!</h1>
+            <p class="text-xl mb-6">Book your flights easily and manage your bookings effortlessly.</p>
+            <p class="mb-6">Start by exploring available flights or checking your existing bookings.</p>
+            <a class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" href="/flights">Explore Flights</a>
+            <a class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 ml-4" href="/bookings">My Bookings</a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h5 class="text-2xl font-bold mb-4">Easy Flight Booking</h5>
+                <p class="text-gray-700 mb-6">Find and book flights to your favorite destinations with just a few clicks.</p>
+                <a href="/flights" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Book Now</a>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h5 class="text-2xl font-bold mb-4">Manage Your Bookings</h5>
+                <p class="text-gray-700 mb-6">View and manage your current bookings and travel plans.</p>
+                <a href="/bookings" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">View Bookings</a>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h5 class="text-2xl font-bold mb-4">Join Us</h5>
+                <p class="text-gray-700 mb-6">Create an account to enjoy a personalized booking experience.</p>
+                <a href="/users" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Flights</title>
+    <link rel="icon" href="/images/airplane.png">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
+            <a class="text-white text-2xl font-bold mb-4 sm:mb-0" href="/">FlightBooking</a>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/flights">Flights</a>
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/bookings">My Bookings</a>
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users">Users</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8">
+        <h1 class="text-3xl font-bold mb-6">Available Flights</h1>
+        
+        <% if (flights && flights.length > 0) { %>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% flights.forEach(flight => { %>
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-xl font-semibold mb-2">Flight <%= flight.flightNumber %></h2>
+                        <p class="mb-1"><strong>From:</strong> <%= flight.departure %></p>
+                        <p class="mb-1"><strong>To:</strong> <%= flight.arrival %></p>
+                        <p class="mb-1"><strong>Departure:</strong> <%= flight.departureTime.toLocaleString() %></p>
+                        <p class="mb-1"><strong>Arrival:</strong> <%= flight.arrivalTime.toLocaleString() %></p>
+                        <a href="/flights/<%= flight._id %>" class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Details</a>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="text-xl">No flights available at the moment.</p>
+        <% } %>
+    </div>
+</body>
+</html>
