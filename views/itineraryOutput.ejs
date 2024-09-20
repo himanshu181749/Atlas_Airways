@@ -4,46 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Travel Itinerary</title>
+    <link rel="icon" href="/images/airplane.png">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .day-card {
+            transition: transform 0.3s ease-in-out;
+        }
+        .day-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Your Travel Itinerary</h1>
+<body class="min-h-screen py-0">
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
+            <a class="text-white text-2xl font-bold mb-4 sm:mb-0" href="/">FlightBooking</a>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <!-- <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/flights">Flights</a> -->
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/about">About Us</a>
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/contact">Contact</a>
+                <% if (user) { %>
+                    <div class="relative group">
+                        <button class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center flex items-center">
+                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            Profile
+                        </button>
+                        <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
+                            <a href="/bookings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Bookings</a>
+                            <a href="/users/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign Out</a>
+                        </div>
+                        <!-- toggle functionality------------------------------------------------------------------------------------------>
+                        <script>
+                            document.querySelector('.group > button').addEventListener('click', function() {
+                                const dropdown = document.getElementById('profileDropdown');
+                                dropdown.classList.toggle('hidden');
+                            });
+                        </script>
+                    </div>
+                <% } else { %>
+                    <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users/login">Login</a>
+                    <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users/signup">Sign Up</a>
+                <% } %>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mx-auto px-4 py-12">
+        <h1 class="text-4xl font-bold mb-12 text-center text-gray-800">
+            <i class="fas fa-plane-departure mr-3"></i>Your Dream Travel Itinerary.
+        </h1>
         
-        <% const itinerary = output; %>
+        <% const itinerary = output.itinerary; %>
         
-        <% Object.entries(itinerary).forEach(([day, details]) => { %>
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
-                <div class="bg-blue-600 text-white px-6 py-4">
-                    <h2 class="text-xl font-semibold"><%= day %></h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% itinerary.forEach((day, index) => { %>
+            <div class="day-card bg-white shadow-xl rounded-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4">
+                    <h2 class="text-2xl font-semibold"><%= day.day %></h2>
                 </div>
                 <div class="p-6">
-                    <% ['Morning', 'Afternoon', 'Evening'].forEach(timeOfDay => { %>
-                        <% if (details[timeOfDay]) { %>
-                            <h3 class="font-semibold text-lg mb-2"><%= timeOfDay %></h3>
-                            <% details[timeOfDay].forEach(activity => { %>
-                                <div class="mb-4">
-                                    <h4 class="font-medium"><%= activity.name %></h4>
-                                    <p><%= activity.description %></p>
+                    <% ['morning', 'afternoon', 'evening'].forEach(timeOfDay => { %>
+                        <% if (day[timeOfDay] && day[timeOfDay].length > 0) { %>
+                            <h3 class="font-semibold text-lg mb-2 capitalize flex items-center">
+                                <i class="fas fa-<%= timeOfDay === 'morning' ? 'sun' : timeOfDay === 'afternoon' ? 'cloud-sun' : 'moon' %> mr-2 text-yellow-500"></i>
+                                <%= timeOfDay %>
+                            </h3>
+                            <% day[timeOfDay].forEach(activity => { %>
+                                <div class="mb-4 pl-6 border-l-2 border-gray-200">
+                                    <h4 class="font-medium text-indigo-600"><%= activity.name %></h4>
+                                    <p class="text-gray-600"><%= activity.description %></p>
                                 </div>
                             <% }); %>
                         <% } %>
                     <% }); %>
                     
-                    <div class="mt-4">
-                        <h3 class="font-semibold text-lg mb-2">Recommended Accommodation</h3>
-                        <% if (Array.isArray(details['Recommended accommodation'])) { %>
-                            <% details['Recommended accommodation'].forEach(accommodation => { %>
-                                <p><strong><%= accommodation.name %>:</strong> <%= accommodation.description %></p>
+                    <div class="mt-6 bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-lg mb-2 flex items-center">
+                            <i class="fas fa-bed mr-2 text-blue-500"></i>Accommodation
+                        </h3>
+                        <% if (day.accommodation && day.accommodation.length > 0) { %>
+                            <% day.accommodation.forEach(accommodation => { %>
+                                <p><strong class="text-green-600"><%= accommodation.name %>:</strong> <%= accommodation.description %></p>
                             <% }); %>
-                        <% } else if (typeof details['Recommended accommodation'] === 'string') { %>
-                            <p><%= details['Recommended accommodation'] %></p>
+                        <% } else { %>
+                            <p>No accommodation information available for this day.</p>
                         <% } %>
-                        <p class="mt-2"><strong>Estimated Daily Budget:</strong> <%= details['Estimated daily budget'] %></p>
+                        <p class="mt-2 font-bold text-purple-600">
+                            <i class="fas fa-wallet mr-2"></i>Estimated Daily Budget: $<%= day.estimatedDailyBudget %> USD
+                        </p>
                     </div>
+                </div>
+                <div class="px-6 py-4 bg-gray-100">
+                    <div class="w-full h-48 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg shadow-md flex items-center justify-center">
+                        <i class="fas fa-map-marked-alt text-6xl text-white"></i>
+                    </div>
+                    <p class="text-center mt-2 text-gray-600 italic">
+                        <%= day.day %> Adventure Awaits!
+                    </p>
                 </div>
             </div>
         <% }); %>
+        </div>
     </div>
+    <footer class="text-center mt-12 text-gray-600">
+        <p>Created with <i class="fas fa-heart text-red-500"></i> by Your Travel Planner</p>
+    </footer>
 </body>
 </html>

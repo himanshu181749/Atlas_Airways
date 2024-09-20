@@ -93,6 +93,21 @@ app.get('/', async (req, res) => {
 
 
 app.post("/itinerary/generate", async function(req, res) {
+    let user;
+    if (req.cookies && req.cookies.token) {
+        try {
+        const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
+        
+        email = decoded.email;
+        user = await User.findOne({ email });
+        } catch (error) {
+        console.error('Error decoding token:', error);
+        }
+    }
+
+    // console.log("user from itinerary: " + user);
+
+
     let {startPoint, destination, startDate, endDate, budget, interests, travelStyle} = req.body;
 
     let data = `Please generate a detailed travel itinerary based on the following information:
@@ -104,21 +119,74 @@ app.post("/itinerary/generate", async function(req, res) {
     - Interests: ${interests}
     - Travel Style: ${travelStyle}
 
-    Please provide an array of a day-by-day itinerary in the following json format for each day and particular day should be in the format of "Day X (Date)":
-    Day X (Date):
-    - Morning: array of objects with name and description [Activity or place to visit, including brief description and estimated time]
-    - Afternoon: array of objects with name and description [Activity or place to visit, including brief description and estimated time]
-    - Evening: array of objects with name and description [Activity or place to visit, including brief description and estimated time]
-    - Recommended accommodation: array of objects with name and description [Name of hotel or area, with brief description]
-    - Estimated daily budget: [Amount in USD]
+    Please provide a day-by-day itinerary in the following JSON format:
 
-    Please ensure the itinerary matches the travel style, respects the overall budget, and incorporates the listed interests. Include suggestions for local cuisine and any must-see attractions.`;
+    {
+      "itinerary": [
+        {
+          "day": "Day 1 (YYYY-MM-DD)",
+          "morning": [
+            {
+              "name": "Activity or place name",
+              "description": "Brief description including estimated time"
+            }
+          ],
+          "afternoon": [
+            {
+              "name": "Activity or place name",
+              "description": "Brief description including estimated time"
+            }
+          ],
+          "evening": [
+            {
+              "name": "Activity or place name",
+              "description": "Brief description including estimated time"
+            }
+          ],
+          "accommodation": [
+            {
+              "name": "Hotel or area name",
+              "description": "Brief description"
+            }
+          ],
+          "estimatedDailyBudget": 100
+        }
+      ]
+    }
+
+    Please ensure the itinerary matches the travel style, respects the overall budget, and incorporates the listed interests. Include suggestions for local cuisine and any must-see attractions. The response should be a valid JSON object that can be parsed directly.`;
     try {
         const result = await model.generateContent(data);
         const output = result.response.text();
-        console.log(output);
-        // res.render('itineraryOutput.ejs', { output });
-        res.send(output);
+        // console.log(output);
+
+        function cleanJsonString(inputStr) {
+            // Remove the ```json at the start
+            if (inputStr.startsWith("```json")) {
+                inputStr = inputStr.slice(7);  // Remove `json` and starting ```
+            }
+        
+            // Remove the ``` at the end
+            if (inputStr.endsWith("```")) {
+                inputStr = inputStr.slice(0, -3);  // Remove the ending ```
+            }
+        
+            return inputStr.trim();  // Trim any extra spaces or newlines
+        }
+
+        // Clean and parse the output
+        const cleanedOutput = cleanJsonString(output);
+        let parsedOutput;
+        try {
+            parsedOutput = JSON.parse(cleanedOutput);
+            // console.log("parsedOutput -----------" + parsedOutput);
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            return res.status(500).send('Error parsing the generated itinerary.');
+        }
+
+        res.render('itineraryOutput.ejs', { output: parsedOutput, user: user });
+        // res.send(parsedOutput);
         // res.send("output mil gya hai gemini se");
     } catch (error) {
         console.error('Error:', error);
