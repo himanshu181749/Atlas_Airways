@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Travel Itinerary</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Your Travel Itinerary</h1>
+        
+        <% const itinerary = output; %>
+        
+        <% Object.entries(itinerary).forEach(([day, details]) => { %>
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+                <div class="bg-blue-600 text-white px-6 py-4">
+                    <h2 class="text-xl font-semibold"><%= day %></h2>
+                </div>
+                <div class="p-6">
+                    <% ['Morning', 'Afternoon', 'Evening'].forEach(timeOfDay => { %>
+                        <% if (details[timeOfDay]) { %>
+                            <h3 class="font-semibold text-lg mb-2"><%= timeOfDay %></h3>
+                            <% details[timeOfDay].forEach(activity => { %>
+                                <div class="mb-4">
+                                    <h4 class="font-medium"><%= activity.name %></h4>
+                                    <p><%= activity.description %></p>
+                                </div>
+                            <% }); %>
+                        <% } %>
+                    <% }); %>
+                    
+                    <div class="mt-4">
+                        <h3 class="font-semibold text-lg mb-2">Recommended Accommodation</h3>
+                        <% if (Array.isArray(details['Recommended accommodation'])) { %>
+                            <% details['Recommended accommodation'].forEach(accommodation => { %>
+                                <p><strong><%= accommodation.name %>:</strong> <%= accommodation.description %></p>
+                            <% }); %>
+                        <% } else if (typeof details['Recommended accommodation'] === 'string') { %>
+                            <p><%= details['Recommended accommodation'] %></p>
+                        <% } %>
+                        <p class="mt-2"><strong>Estimated Daily Budget:</strong> <%= details['Estimated daily budget'] %></p>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+</body>
+</html>

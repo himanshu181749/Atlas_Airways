@@ -58,10 +58,10 @@ router.post('/signup', async (req, res) => {
   }
 })
 
-// Login route
+// Login route ----------------------------------------------------------------------------------------------------------
 router.get('/login', async (req, res) => {
   const token = req.cookies && req.cookies.token;
-  // console.log(token)
+  console.log("token from login route-------> " + token)
 
   if (token) {
     try {
@@ -72,14 +72,15 @@ router.get('/login', async (req, res) => {
       }
     } catch (error) {
       // If token is invalid, clear it
-      res.clearCookie('token');
+      // res.clearCookie('token');
+      res.cookie("token", "");
     }
   }
   // If no valid token, render login page
   else res.render('login.ejs');
 });
 
-// Login POST route
+// Login POST route ------------------------------------------------------------------------------------------------------
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -89,7 +90,7 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
-
+    
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -99,11 +100,17 @@ router.post('/login', async (req, res) => {
     // Create and assign token
     const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
     res.cookie('token', token, { httpOnly: true });
+    console.log("token from login post route -------> " + token);
 
     res.render('loggedIn.ejs', { user });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong', error: error.message });
   }
+});
+
+router.get('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/');
 });
 
 

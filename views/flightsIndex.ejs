@@ -12,12 +12,73 @@
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
             <a class="text-white text-2xl font-bold mb-4 sm:mb-0" href="/">FlightBooking</a>
             <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/flights">Flights</a>
-                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/bookings">My Bookings</a>
-                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users">Users</a>
+                <!-- <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/flights">Flights</a> -->
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/">Home</a>
+                <% if (user) { %>
+                    <div class="relative group">
+                        <button class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center flex items-center">
+                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            Profile
+                        </button>
+                        <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
+                            <a href="/bookings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Bookings</a>
+                            <a href="/users/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign Out</a>
+                        </div>
+                        <!-- toggle functionality------------------------------------------------------------------------------------------>
+                        <script>
+                            document.querySelector('.group > button').addEventListener('click', function() {
+                                const dropdown = document.getElementById('profileDropdown');
+                                dropdown.classList.toggle('hidden');
+                            });
+                        </script>
+                    </div>
+                <% } else { %>
+                    <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users/login">Login</a>
+                    <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users/signup">Sign Up</a>
+                <% } %>
             </div>
         </div>
     </nav>
+
+    <div class="container mx-auto mt-8">
+        <form id="searchForm" class="mb-8">
+            <div class="flex flex-wrap -mx-2 mb-4">
+                <div class="w-full md:w-1/4 px-2 mb-4">
+                    <label for="departure" class="block text-gray-700 text-sm font-bold mb-2">From:</label>
+                    <input type="text" id="departure" name="departure" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="w-full md:w-1/4 px-2 mb-4">
+                    <label for="arrival" class="block text-gray-700 text-sm font-bold mb-2">To:</label>
+                    <input type="text" id="arrival" name="arrival" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="w-full md:w-1/4 px-2 mb-4">
+                    <label for="departureDate" class="block text-gray-700 text-sm font-bold mb-2">Departure Date:</label>
+                    <input type="date" id="departureDate" name="departureDate" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="w-full md:w-1/4 px-2 mb-4 flex items-end">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Search Flights
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const departure = document.getElementById('departure').value;
+            const arrival = document.getElementById('arrival').value;
+            const departureDate = document.getElementById('departureDate').value;
+
+            // Construct the query string
+            const queryString = `?departure=${departure}&arrival=${arrival}&departureDate=${departureDate}`;
+
+            // Redirect to the same page with the search parameters
+            window.location.href = `/flights${queryString}`;
+        });
+    </script>
 
     <div class="container mx-auto mt-8">
         <h1 class="text-3xl font-bold mb-6">Available Flights</h1>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Itinerary</title>
+    <link rel="icon" href="/images/airplane.png">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+            <div class="h-64 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+            <div class="px-6 py-8">
+                <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Create Your Travel Itinerary</h1>
+                <form action="/itinerary/generate" method="POST" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-2" for="startPoint">
+                                Starting Point
+                            </label>
+                            <input class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="startPoint" type="text" name="startPoint" required placeholder="e.g. New York, USA">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-2" for="destination">
+                                Destination
+                            </label>
+                            <input class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="destination" type="text" name="destination" required placeholder="e.g. Paris, France">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-2" for="startDate">
+                                Start Date
+                            </label>
+                            <input class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="startDate" type="date" name="startDate" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-2" for="endDate">
+                                End Date
+                            </label>
+                            <input class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="endDate" type="date" name="endDate" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-2" for="budget">
+                                Budget (USD)
+                            </label>
+                            <input class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="budget" type="number" name="budget" required placeholder="e.g. 2000">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-semibold mb-2" for="interests">
+                                Interests (comma-separated)
+                            </label>
+                            <input class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="interests" type="text" name="interests" required placeholder="e.g. museums, food, hiking">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-semibold mb-2" for="travelStyle">
+                            Travel Style
+                        </label>
+                        <select class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="travelStyle" name="travelStyle" required>
+                            <option value="">Select your travel style</option>
+                            <option value="relaxed">Relaxed</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="intense">Intense</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110" type="submit">
+                            Generate Itinerary
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
