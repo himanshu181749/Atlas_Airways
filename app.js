@@ -203,6 +203,52 @@ app.get("/itinerary", async (req, res) => {
     // res.send("Itenary page");
 })
 
+app.get("/carbon-calculator", async (req, res) => {
+    let user;
+    if (req.cookies && req.cookies.token) {
+        try {
+        const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
+        email = decoded.email;
+        user = await User.findOne({ email });
+        } catch (error) {
+        console.error('Error decoding token:', error);
+        }
+    }
+    res.render("carbonCalculator.ejs", { user: user });
+    // res.send("Carbon calculator page");
+})
+
+app.post("/carbon-calculator/calculate", async (req, res) => {
+    // let user;
+    // if (req.cookies && req.cookies.token) {
+    //     try {
+    //     const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
+    //     email = decoded.email;
+    //     user = await User.findOne({ email });
+    //     } catch (error) {
+    //     console.error('Error decoding token:', error);
+    //     }
+    // }
+
+    const { bookingId } = req.body;
+    // const booking = await Booking.findById(bookingId);
+
+    // if (!booking) {
+    //     return res.status(404).send('Booking not found.');
+    // }
+
+    // const flight = await Flight.findById(booking.flightId);
+
+    // if (!flight) {
+    //     return res.status(404).send('Flight not found.');
+    // }
+
+    // const carbonFootprint = calculateCarbonFootprint(flight);
+
+    // res.render("carbonCalculator.ejs", { user: user, carbonFootprint: carbonFootprint });
+
+    res.send(`Carbon Footprint generated for ${bookingId} is 1000 kgCO2e`);
+}) 
 
 app.listen(3000);
 

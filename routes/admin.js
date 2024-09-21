@@ -164,19 +164,15 @@ router.post("/flights/edit/:id", async (req, res) => {
 });
 
 // Delete a flight (Admin-only route)
-router.delete("/flights/:id", async (req, res) => {
+// Delete a flight (Admin Only)
+router.post('/flights/delete/:id', adminAuth, async (req, res) => {
   try {
-    const flight = await Flight.findById(req.params.id);
-    if (!flight) {
-      return res.status(404).json({ message: "Flight not found" });
-    }
-    await flight.remove();
-    res.json({ message: "Flight deleted successfully" });
+    const { id } = req.params;
+    await Flight.findByIdAndDelete(id);
+    res.redirect('/admin/flights'); // Redirect to the flight list after deletion
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to delete flight", error: error.message });
-  }
+    res.status(500).json({ message: 'Error deleting flight', error: error.message });
+  }
 });
 
 

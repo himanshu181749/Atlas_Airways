@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - FlightBooking</title>
+    <link rel="icon" href="/images/airplane.png">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
+            <a class="text-white text-2xl font-bold mb-4 sm:mb-0" href="/">FlightBooking</a>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/flights">Flights</a>
+                <% if (user) { %>
+                    <div class="relative group">
+                        <button class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center flex items-center">
+                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            Profile
+                        </button>
+                        <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
+                            <a href="/users/bookings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Bookings</a>
+                            <a href="/users/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign Out</a>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users/login">Login</a>
+                    <a class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium text-center" href="/users/signup">Sign Up</a>
+                <% } %>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8">
+        <h1 class="text-3xl font-bold mb-6">My Bookings</h1>
+        <% if (user) { %>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-2">Booking ID: BOK123456</h2>
+                    <p class="mb-1"><strong>Flight:</strong> FL789</p>
+                    <p class="mb-1"><strong>From:</strong> New York (JFK)</p>
+                    <p class="mb-1"><strong>To:</strong> London (LHR)</p>
+                    <p class="mb-1"><strong>Departure:</strong> 2023-07-15 10:00 AM</p>
+                    <p class="mb-1"><strong>Arrival:</strong> 2023-07-15 10:00 PM</p>
+                    <p class="mb-1"><strong>Seats:</strong> 14A, 14B</p>
+                    <p class="mb-4"><strong>Total Price:</strong> $1200</p>
+                    <button onclick="cancelBooking('BOK123456')" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancel Booking</button>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-2">Booking ID: BOK789012</h2>
+                    <p class="mb-1"><strong>Flight:</strong> FL456</p>
+                    <p class="mb-1"><strong>From:</strong> Los Angeles (LAX)</p>
+                    <p class="mb-1"><strong>To:</strong> Tokyo (NRT)</p>
+                    <p class="mb-1"><strong>Departure:</strong> 2023-08-01 11:30 AM</p>
+                    <p class="mb-1"><strong>Arrival:</strong> 2023-08-02 3:30 PM</p>
+                    <p class="mb-1"><strong>Seats:</strong> 22C</p>
+                    <p class="mb-4"><strong>Total Price:</strong> $1500</p>
+                    <button onclick="cancelBooking('BOK789012')" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancel Booking</button>
+                </div>
+            </div>
+        <% } else { %>
+            <p class="text-lg">Please <a href="/users/login" class="text-blue-500 hover:underline">login</a> to view your bookings.</p>
+        <% } %>
+    </div>
+
+    <script>
+        document.querySelector('.group > button').addEventListener('click', function() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('hidden');
+        });
+
+        function cancelBooking(bookingId) {
+            if (confirm('Are you sure you want to cancel this booking?')) {
+                alert('Booking ' + bookingId + ' cancelled successfully');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
