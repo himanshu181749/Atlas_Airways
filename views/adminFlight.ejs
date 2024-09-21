@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Flights - FlightBooking</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a class="text-white text-2xl font-bold" href="/admin/dashboard">FlightBooking Admin</a>
+            <div>
+                <a href="/admin/logout" class="text-white hover:text-gray-300">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto mt-8">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">All Flights</h2>
+            <table class="table-auto w-full">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="w-1/6 py-2">Flight Number</th>
+                        <th class="w-1/6 py-2">Departure</th>
+                        <th class="w-1/6 py-2">Arrival</th>
+                        <th class="w-1/6 py-2">Departure Time</th>
+                        <th class="w-1/6 py-2">Arrival Time</th>
+                        <th class="w-1/6 py-2">Price</th>
+                        <th class="w-1/6 py-2">Seats</th>
+                        <th class="w-1/6 py-2">Available Seats</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% flights.forEach(function(flight) { %>
+                    <tr>
+                        <td class="border px-4 py-2"><%= flight.flightNumber %></td>
+                        <td class="border px-4 py-2"><%= flight.departure %></td>
+                        <td class="border px-4 py-2"><%= flight.arrival %></td>
+                        <td class="border px-4 py-2"><%= flight.departureTime %></td>
+                        <td class="border px-4 py-2"><%= flight.arrivalTime %></td>
+                        <td class="border px-4 py-2"><%= flight.price %></td>
+                        <td class="border px-4 py-2"><%= flight.seats %></td>
+                        <td class="border px-4 py-2"><%= flight.availableSeats %></td>
+                        <td class="border px-4 py-2">
+                            <a href="/admin/flights/edit/<%= flight._id %>" class="text-blue-500 hover:underline">Edit</a>
+                            <form action="/admin/flights/delete/<%= flight._id %>" method="POST" class="inline">
+                                <button type="submit" class="text-red-500 hover:underline ml-4">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

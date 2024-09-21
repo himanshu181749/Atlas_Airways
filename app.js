@@ -18,10 +18,12 @@ require('dotenv').config();
 const app = express();
 
 
+
 // importing routes ----------------------------------------------------------
 const flightRoutes = require('./routes/flights.js');
 const userRoutes = require('./routes/users.js');
 const bookingRoutes = require('./routes/bookings.js');
+const adminRoutes = require('./routes/admin.js');  // Import admin routes
 
 // importing models ----------------------------------------------------------
 const Flight = require('./models/Flight.js');
@@ -68,6 +70,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //Routes ---------------------------------------------------------------------
 app.use('/flights', flightRoutes);
 app.use('/users', userRoutes);
+app.use('/admin', adminRoutes); 
 app.use('/bookings', bookingRoutes);
 
 app.get('/', async (req, res) => {

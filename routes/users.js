@@ -126,12 +126,6 @@ router.get('/logout', (req, res) => {
 
 
 
-
-
-
-
-
-
 // Update a user
 router.patch('/:id', async (req, res) => {
   try {

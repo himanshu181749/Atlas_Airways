@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - FlightBooking</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a class="text-white text-2xl font-bold" href="/admin/dashboard">FlightBooking Admin</a>
+            <div>
+                <a href="/admin/logout" class="text-white hover:text-gray-300">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto mt-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Manage Flights -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Manage Flights</h2>
+                <a href="/admin/flights" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">View Flights</a>
+                <a href="/admin/flights/add" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 ml-2">Add Flight</a>
+            </div>
+
+            <!-- Manage Users
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Manage Users</h2>
+                <a href="/admin/users" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">View Users</a>
+            </div> -->
+        </div>
+    </div>
+</body>
+</html>
