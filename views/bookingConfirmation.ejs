@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - FlightBooking</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <nav class="bg-gray-800 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a class="text-white text-2xl font-bold flex items-center" href="/">
+                <i class="fas fa-plane-departure mr-2"></i>FlightBooking
+            </a>
+            <div class="flex space-x-6">
+                <a class="text-gray-300 hover:text-white transition duration-300 flex items-center" href="/">
+                    <i class="fas fa-home mr-1"></i>Home
+                </a>
+                <a class="text-gray-300 hover:text-white transition duration-300 flex items-center" href="/flights">
+                    <i class="fas fa-plane mr-1"></i>Flights
+                </a>
+                <a class="text-gray-300 hover:text-white transition duration-300 flex items-center" href="/users/bookings">
+                    <i class="fas fa-ticket-alt mr-1"></i>My Bookings
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex-grow container mx-auto px-4 py-8 max-w-4xl">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-4xl font-bold mb-8 text-green-600 flex items-center">
+                <i class="fas fa-check-circle mr-3"></i>Booking Confirmed!
+            </h1>
+            
+            <div class="mb-8 bg-gray-50 p-6 rounded-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-600">Booking Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <p><strong class="text-gray-700">Booking ID:</strong> <span class="text-blue-600"><%= booking._id %></span></p>
+                    <p><strong class="text-gray-700">User Name:</strong> <%= booking.user.name %></p>
+                    <p><strong class="text-gray-700">User Email:</strong> <%= booking.user.email %></p>
+                    <p><strong class="text-gray-700">Quantity:</strong> <%= booking.quantity %></p>
+                    <p><strong class="text-gray-700">Contact Phone:</strong> <%= booking.phone %></p>
+                    <p><strong class="text-gray-700">Booking Date:</strong> <%= booking.bookingDate.toLocaleDateString() %></p>
+                </div>
+            </div>
+
+            <div class="mb-8 bg-gray-50 p-6 rounded-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-600">Flight Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <p><strong class="text-gray-700">Flight Number:</strong> <%= booking.flight.flightNumber %></p>
+                    <p><strong class="text-gray-700">Airline:</strong> <%= booking.flight.airline %></p>
+                    <p><strong class="text-gray-700">Departure:</strong> <%= booking.flight.departure %> at <%= booking.flight.departureTime ? booking.flight.departureTime.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) : 'N/A' %></p>
+                    <p><strong class="text-gray-700">Arrival:</strong> <%= booking.flight.arrival %> at <%= booking.flight.arrivalTime ? booking.flight.arrivalTime.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) : 'N/A' %></p>
+                    <p><strong class="text-gray-700">Price:</strong> <span class="text-green-600 font-semibold">$<%= booking.flight.price.toFixed(2) %></span></p>
+                </div>
+            </div>
+
+            <div class="mb-8 bg-gray-50 p-6 rounded-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-600">Traveller Information</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <% booking.travelers.forEach((traveler, index) => { %>
+                        <li class="text-gray-700"><%= traveler %></li>
+                    <% }); %>
+                </ul>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="/users/bookings" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 inline-flex items-center">
+                    <i class="fas fa-list-ul mr-2"></i>View All Bookings
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

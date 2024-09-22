@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Flight</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <nav class="bg-gray-800 p-2 md:p-3">
+        <div class="container mx-auto flex justify-between items-center">
+            <a class="text-white text-xl md:text-2xl font-bold" href="/">FlightBooking</a>
+            <div class="flex space-x-3 md:space-x-4">
+                <a class="text-gray-300 hover:text-white px-2 py-1 text-sm md:text-base" href="/">Home</a>
+                <% if (user) { %>
+                    <div class="relative group">
+                        <button class="text-gray-300 hover:text-white px-2 py-1 text-sm md:text-base flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            Profile
+                        </button>
+                        <div id="profileDropdown" class="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg hidden">
+                            <a href="/users/bookings" class="block px-3 py-1 text-xs md:text-sm text-gray-700 hover:bg-gray-100">My Bookings</a>
+                            <a href="/users/logout" class="block px-3 py-1 text-xs md:text-sm text-gray-700 hover:bg-gray-100">Sign Out</a>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <a class="text-gray-300 hover:text-white px-2 py-1 text-sm md:text-base" href="/users/login">Login</a>
+                    <a class="text-gray-300 hover:text-white px-2 py-1 text-sm md:text-base" href="/users/signup">Sign Up</a>
+                <% } %>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex-grow container mx-auto px-2 py-3 md:py-4 max-w-4xl overflow-y-auto">
+        <h1 class="text-2xl md:text-3xl font-bold mb-3 md:mb-4 text-blue-600">Book Your Flight</h1>
+        
+        <% if (flight) { %>
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 mb-4">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-2xl font-bold text-blue-600">Flight <%= flight.flightNumber %></h2>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">On Time</span>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <div class="text-center">
+                        <p class="text-lg font-semibold font-serif"><%= flight.departure %></p>
+                        <p class="text-sm text-gray-500 font-mono"><%= flight.departureTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></p>
+                    </div>
+                    <div class="flex-1 px-4">
+                        <div class="h-0.5 bg-gray-300 relative">
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-lg font-semibold font-serif"><%= flight.arrival %></p>
+                        <p class="text-sm text-gray-500 font-mono"><%= flight.arrivalTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <p class="text-sm text-gray-600">Duration: <%= Math.round((flight.arrivalTime - flight.departureTime) / (1000 * 60 * 60)) %> hours</p>
+                    <p class="text-lg font-bold text-green-600">$<%= flight.price %></p>
+                </div>
+                <div class="flex justify-between items-center">
+                    <p class="text-sm text-green-600 font-bold">Available Seats: <%= flight.availableSeats %></p>
+                </div>
+            </div>
+
+            <% if (user) { %>
+                <form action="/flights/book/<%= flight._id %>" method="POST" class="bg-white rounded-lg shadow-md p-3 md:p-4">
+                    <h2 class="text-xl md:text-2xl font-bold mb-2 md:mb-3 text-blue-600">Booking Details</h2>
+                    <input type="hidden" name="email" value="<%= user.email %>">
+                    <div class="mb-2 md:mb-3">
+                        <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Number of Travelers</label>
+                        <input type="number" id="quantity" name="quantity" min="1" max="<%= flight.availableSeats %>" required class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                    </div>
+                    <div id="travelerDetails" class="max-h-24 overflow-y-auto mb-2 md:mb-3"></div>
+                    <div class="mb-2 md:mb-3">
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-3 rounded-md focus:outline-none focus:shadow-outline transition duration-300 text-sm">
+                        Confirm Booking
+                    </button>
+                </form>
+                <script>
+                    document.getElementById('quantity').addEventListener('change', function() {
+                        const quantity = this.value;
+                        const travelerDetails = document.getElementById('travelerDetails');
+                        travelerDetails.innerHTML = '';
+                        for (let i = 0; i < quantity; i++) {
+                            travelerDetails.innerHTML += `
+                                <div class="mb-2">
+                                    <label for="traveler${i}" class="block text-sm font-medium text-gray-700 mb-1">Traveler ${i+1} Name</label>
+                                    <input type="text" id="traveler${i}" name="travelers[]" required class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                </div>
+                            `;
+                        }
+                    });
+                </script>
+            <% } else { %>
+                <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 md:p-3 mb-3 md:mb-4 rounded-md" role="alert">
+                    <p class="text-sm md:text-base">Please <a href="/users/login" class="font-bold underline hover:text-yellow-800">log in</a> to book this flight.</p>
+                </div>
+            <% } %>
+        <% } else { %>
+            <p class="text-lg md:text-xl text-red-600 font-semibold">Flight not found.</p>
+        <% } %>
+
+        <a href="/flights" class="inline-block mt-3 md:mt-4 bg-gray-500 hover:bg-gray-600 text-white font-bold py-1 md:py-2 px-3 md:px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-300 text-sm md:text-base">
+            Back to Flights
+        </a>
+    </div>
+    <script>
+        document.querySelector('.group > button').addEventListener('click', function() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
+

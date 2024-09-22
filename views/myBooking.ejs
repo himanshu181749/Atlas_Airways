@@ -36,28 +36,38 @@
         <h1 class="text-3xl font-bold mb-6">My Bookings</h1>
         <% if (user) { %>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-semibold mb-2">Booking ID: BOK123456</h2>
-                    <p class="mb-1"><strong>Flight:</strong> FL789</p>
-                    <p class="mb-1"><strong>From:</strong> New York (JFK)</p>
-                    <p class="mb-1"><strong>To:</strong> London (LHR)</p>
-                    <p class="mb-1"><strong>Departure:</strong> 2023-07-15 10:00 AM</p>
-                    <p class="mb-1"><strong>Arrival:</strong> 2023-07-15 10:00 PM</p>
-                    <p class="mb-1"><strong>Seats:</strong> 14A, 14B</p>
-                    <p class="mb-4"><strong>Total Price:</strong> $1200</p>
-                    <button onclick="cancelBooking('BOK123456')" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancel Booking</button>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-semibold mb-2">Booking ID: BOK789012</h2>
-                    <p class="mb-1"><strong>Flight:</strong> FL456</p>
-                    <p class="mb-1"><strong>From:</strong> Los Angeles (LAX)</p>
-                    <p class="mb-1"><strong>To:</strong> Tokyo (NRT)</p>
-                    <p class="mb-1"><strong>Departure:</strong> 2023-08-01 11:30 AM</p>
-                    <p class="mb-1"><strong>Arrival:</strong> 2023-08-02 3:30 PM</p>
-                    <p class="mb-1"><strong>Seats:</strong> 22C</p>
-                    <p class="mb-4"><strong>Total Price:</strong> $1500</p>
-                    <button onclick="cancelBooking('BOK789012')" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancel Booking</button>
-                </div>
+                <% bookings.forEach((booking) => { %>
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                        <h2 class="text-xl font-semibold mb-4 text-gray-600">Booking ID: <span class="text-blue-700"><%= booking._id %></span></h2>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <p class="text-sm"><span class="font-semibold text-gray-600">Flight Number:</span> <span class="text-blue-500"><%= booking.flight.flightNumber %></span></p>
+                            <p class="text-sm"><span class="font-semibold text-gray-600">Airline:</span> <span class="text-blue-500"><%= booking.flight.airline %></span></p>
+                            <p class="text-sm"><span class="font-semibold text-gray-600">From:</span> <span class="text-blue-500"><%= booking.flight.departure %></span></p>
+                            <p class="text-sm"><span class="font-semibold text-gray-600">To:</span> <span class="text-blue-500"><%= booking.flight.arrival %></span></p>
+                            <p class="text-sm"><span class="font-semibold text-gray-600">Departure:</span> <span class="text-blue-500"><%= booking.flight.departureTime.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) %></span></p>
+                            <p class="text-sm"><span class="font-semibold text-gray-600">Arrival:</span> <span class="text-blue-500"><%= booking.flight.arrivalTime.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) %></span></p>
+                            <p class="text-sm"><span class="font-semibold text-gray-600">Travelers:</span> <span class="text-blue-500"><%= booking.quantity %></span></p>
+                            <p class="text-sm"><span class="font-semibold text-gray-600">Total Price:</span> <span class="text-green-500 font-bold">$<%= (booking.flight.price * booking.quantity).toFixed(2) %></span></p>
+                        </div>
+                        <div class="mb-4">
+                            <p class="text-sm"><span class="font-semibold text-gray-600">Contact Phone:</span> <span class="text-blue-500"><%= booking.phone %></span></p>
+                            <p class="text-sm"><span class="font-semibold text-gray-600">Booking Date:</span> <span class="text-blue-500"><%= new Date(booking.bookingDate).toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) %></span></p>
+                        </div>
+                        <details class="mb-4">
+                            <summary class="cursor-pointer text-blue-600 hover:text-blue-800">View Travelers</summary>
+                            <ul class="list-disc list-inside mt-2">
+                                <% booking.travelers.forEach(traveler => { %>
+                                    <li class="text-sm text-gray-600"><%= traveler %></li>
+                                <% }); %>
+                            </ul>
+                        </details>
+                        <a href="/bookings/cancel/<%= booking._id %>" class="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 inline-block transition-colors duration-300 text-sm font-semibold">Cancel Booking</a>
+                    </div>
+                <% }); %>
+                <% if (bookings.length === 0) { %>
+                    <p class="col-span-full text-center text-lg text-gray-600">You have no bookings at the moment.</p>
+                <% } %>
+            </div>
             </div>
         <% } else { %>
             <p class="text-lg">Please <a href="/users/login" class="text-blue-500 hover:underline">login</a> to view your bookings.</p>

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User.js');
+const Booking = require('../models/Booking.js');
+const Flight = require('../models/Flight.js');
 
 require('dotenv').config();
 
@@ -113,17 +115,26 @@ router.get('/logout', (req, res) => {
   res.redirect('/');
 });
 
+router.get('/bookings', async (req, res) => {
+  const token = req.cookies && req.cookies.token;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findOne({ email: decoded.email });
 
+      const bookings = await Booking.find({ user: user._id }).populate('flight');
 
+      // No need to manually populate flightDetails as it's already in the Booking model
+      console.log(bookings.flightDetails);
 
-
-
-
-
-
-
-
-
+      res.render('myBooking.ejs', { user, bookings });
+    } catch (error) {
+      res.status(401).json({ message: 'Unauthorized' });
+    }
+  } else {
+    res.redirect('/login');
+  }
+});
 
 
 // Update a user

@@ -21,7 +21,7 @@
                             Profile
                         </button>
                         <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
-                            <a href="/bookings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Bookings</a>
+                            <a href="/users/bookings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Bookings</a>
                             <a href="/users/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign Out</a>
                         </div>
                         <!-- toggle functionality------------------------------------------------------------------------------------------>
@@ -40,28 +40,44 @@
         </div>
     </nav>
 
-    <div class="container mx-auto mt-8">
-        <form id="searchForm" class="mb-8">
-            <div class="flex flex-wrap -mx-2 mb-4">
-                <div class="w-full md:w-1/4 px-2 mb-4">
-                    <label for="departure" class="block text-gray-700 text-sm font-bold mb-2">From:</label>
-                    <input type="text" id="departure" name="departure" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="w-full md:w-1/4 px-2 mb-4">
-                    <label for="arrival" class="block text-gray-700 text-sm font-bold mb-2">To:</label>
-                    <input type="text" id="arrival" name="arrival" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="w-full md:w-1/4 px-2 mb-4">
-                    <label for="departureDate" class="block text-gray-700 text-sm font-bold mb-2">Departure Date:</label>
-                    <input type="date" id="departureDate" name="departureDate" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="w-full md:w-1/4 px-2 mb-4 flex items-end">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        Search Flights
-                    </button>
-                </div>
+    <div class="w-full">
+        <div class="relative mb-6">
+            <img src="https://i.pinimg.com/564x/5e/ec/66/5eec66532b9e3b2b735e4c8ac9bebd92.jpg" alt="Airplane in sky" class="w-full h-80 object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center">
+                <h1 class="text-3xl md:text-4xl font-bold text-white mb-6 shadow-text">Find Your Next Flight</h1>
+                <form id="searchForm" class="w-full max-w-3xl bg-gray-900 bg-opacity-75 shadow-lg p-6 rounded-lg">
+                    <div class="flex flex-wrap -mx-2">
+                        <div class="w-full md:w-1/4 px-2 mb-4 md:mb-0">
+                            <label for="departure" class="block text-white text-sm font-bold mb-1">From</label>
+                            <div class="relative">
+                                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                                <input type="text" id="departure" name="departure" placeholder="City or airport" class="pl-9 w-full bg-gray-800 border border-gray-700 text-white text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2">
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/4 px-2 mb-4 md:mb-0">
+                            <label for="arrival" class="block text-white text-sm font-bold mb-1">To</label>
+                            <div class="relative">
+                                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                <input type="text" id="arrival" name="arrival" placeholder="City or airport" class="pl-9 w-full bg-gray-800 border border-gray-700 text-white text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2">
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/4 px-2 mb-4 md:mb-0">
+                            <label for="departureDate" class="block text-white text-sm font-bold mb-1">Departure Date</label>
+                            <div class="relative">
+                                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <input type="date" id="departureDate" name="departureDate" class="pl-9 w-full bg-gray-800 border border-gray-700 text-white text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2">
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/4 px-2 mb-4 md:mb-0 flex items-end">
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                Search Flights
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 
     <script>
@@ -78,21 +94,60 @@
             // Redirect to the same page with the search parameters
             window.location.href = `/flights${queryString}`;
         });
+
+        // Ensure this script runs after the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileButton = document.querySelector('.group > button');
+            const profileDropdown = document.getElementById('profileDropdown');
+            const searchForm = document.getElementById('searchForm');
+
+            if (profileButton && profileDropdown && searchForm) {
+                searchForm.style.zIndex = '1';
+                profileDropdown.style.zIndex = '2';
+            }
+        });
     </script>
 
-    <div class="container mx-auto mt-8">
+    <div class="container mx-auto mt-8 mb-2">
         <h1 class="text-3xl font-bold mb-6">Available Flights</h1>
         
         <% if (flights && flights.length > 0) { %>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <% flights.forEach(flight => { %>
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-xl font-semibold mb-2">Flight <%= flight.flightNumber %></h2>
-                        <p class="mb-1"><strong>From:</strong> <%= flight.departure %></p>
-                        <p class="mb-1"><strong>To:</strong> <%= flight.arrival %></p>
-                        <p class="mb-1"><strong>Departure:</strong> <%= flight.departureTime.toLocaleString() %></p>
-                        <p class="mb-1"><strong>Arrival:</strong> <%= flight.arrivalTime.toLocaleString() %></p>
-                        <a href="/flights/<%= flight._id %>" class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Details</a>
+                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
+                        <div class="flex justify-between items-start mb-4">
+                            <h2 class="text-2xl font-bold text-blue-600">Flight <%= flight.flightNumber %></h2>
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">On Time</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-center">
+                                <p class="text-lg font-semibold font-serif"><%= flight.departure %></p>
+                                <p class="text-sm text-gray-500 font-mono"><%= flight.departureTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></p>
+                            </div>
+                            <div class="flex-1 px-4">
+                                <div class="h-0.5 bg-gray-300 relative">
+                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-lg font-semibold font-serif"><%= flight.arrival %></p>
+                                <p class="text-sm text-gray-500 font-mono"><%= flight.arrivalTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="text-sm text-gray-600">Duration: <%= Math.round((flight.arrivalTime - flight.departureTime) / (1000 * 60 * 60)) %> hours</p>
+                            <p class="text-lg font-bold text-green-600">$<%= flight.price %></p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-sm text-green-600 font-bold">Available Seats: <%= flight.availableSeats %></p>
+                            <a href="/flights/book/<%= flight._id %>" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 inline-block text-center">
+                                Book Now
+                            </a>
+                        </div>
                     </div>
                 <% }); %>
             </div>
