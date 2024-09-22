@@ -132,7 +132,8 @@ router.get('/bookings', async (req, res) => {
       res.status(401).json({ message: 'Unauthorized' });
     }
   } else {
-    res.redirect('/login');
+    // res.redirect('/login');
+    res.render('login.ejs');
   }
 });
 
