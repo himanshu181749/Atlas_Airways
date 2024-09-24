@@ -49,7 +49,7 @@ router.post('/signup', async (req, res) => {
             let newUser = new User({ name, email, password: hash });
             await newUser.save();
             res.cookie("token", jwt.sign({ name, email, password : hash }, process.env.JWT_SECRET));
-            res.render('loggedIn.ejs');
+            res.render('loggedIn.ejs', { user: newUser });
           } catch (error) {
             res.status(500).json({ message: 'Something went wrong', error: error.message });
           }
@@ -125,16 +125,23 @@ router.get('/bookings', async (req, res) => {
       const bookings = await Booking.find({ user: user._id }).populate('flight');
 
       // No need to manually populate flightDetails as it's already in the Booking model
-      console.log(bookings.flightDetails);
+      console.log(bookings);
 
       res.render('myBooking.ejs', { user, bookings });
     } catch (error) {
       res.status(401).json({ message: 'Unauthorized' });
     }
   } else {
-    res.redirect('/login');
+    // res.redirect('/login');
+    res.render('login.ejs');
   }
 });
+
+
+
+
+
+// ye saare features admin ke liye hone chahiye right ? ---------------------------------------------------------------------------
 
 
 // Update a user

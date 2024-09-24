@@ -250,5 +250,9 @@ app.post("/carbon-calculator/calculate", async (req, res) => {
     res.send(`Carbon Footprint generated for ${bookingId} is 1000 kgCO2e`);
 }) 
 
-app.listen(3000);
+const PORT = process.env.PORT || 3000;
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
+app.listen(PORT, () => {
+    console.log(`Server is running at ${BASE_URL}`);
+});
 
