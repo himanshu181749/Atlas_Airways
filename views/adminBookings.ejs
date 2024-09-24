@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Bookings</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-8">
+        <h1 class="text-3xl font-bold mb-6">Manage Bookings</h1>
+
+        <!-- Back to Dashboard Button -->
+        <div class="mb-4">
+            <a href="/admin/dashboard" class="bg-green-500 text-white px-4 py-2 rounded-md">Back to Dashboard</a>
+        </div>
+
+        <!-- Search Bar -->
+        <!-- <div class="mb-4">
+            <input type="text" id="searchInput" placeholder="Search by Booking ID, User, or Flight" class="border p-2 w-full" onkeyup="filterBookings()">
+        </div> -->
+        <!-- Search Bar -->
+        <div class="mb-4">
+            <form id="searchForm">
+                <input type="text" id="searchQuery" placeholder="Search by Booking ID, Traveler Name, or Flight Number" class="border p-2 w-full">
+                <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md">Search</button>
+            </form>
+        </div>
+
+
+        <!-- Bookings Table -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <table class="min-w-full leading-normal" id="bookingsTable">
+                <thead>
+                    <tr>
+                        <th class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Booking ID</th>
+                        <th class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Travelers</th>
+                        <th class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Flight</th>
+                        <th class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">From - To</th>
+                        <th class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Booking Date</th>
+                        <th class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                        <th class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% bookings.forEach((booking) => { %>
+                    <tr>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm"><%= booking._id %></td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm"><%= booking.travelers.join(', ') %></td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm"><%= booking.flight.flightNumber %></td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm"><%= booking.flight.departure %> - <%= booking.flight.arrival %></td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm"><%= new Date(booking.bookingDate).toLocaleDateString() %></td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <select class="border p-2" onchange="updateStatus('<%= booking._id %>', this.value)">
+                                <option <%= booking.status === 'Confirmed' ? 'selected' : '' %>>Confirmed</option>
+                                <option <%= booking.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                <option <%= booking.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                            </select>
+                        </td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <a href="/admin/bookings/edit/<%= booking._id %>" class="bg-blue-500 text-white px-4 py-2 rounded-md">Edit</a>
+                            <button class="bg-red-500 text-white px-4 py-2 rounded-md" onclick="cancelBooking('<%= booking._id %>')">Cancel</button>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function cancelBooking(bookingId) {
+            if (confirm('Are you sure you want to cancel this booking?')) {
+                fetch(`/admin/bookings/cancel/${bookingId}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Booking cancelled successfully');
+                            setTimeout(() => {
+                                location.reload(); // Ensures the page refreshes
+                            }, 500);
+                        } else {
+                            alert('Error cancelling booking: ' + data.message);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        }
+
+        {/* function updateStatus(bookingId, status) {
+            fetch(`/admin/bookings/update-status/${bookingId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Status updated successfully');
+                } else {
+                    alert('Error updating status: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        } */}
+
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent the default form submission behavior
+        
+            const searchQuery = document.getElementById('searchQuery').value;
+        
+            if (searchQuery.trim() !== '') {
+                // Construct the query string
+                const queryString = `?search=${encodeURIComponent(searchQuery)}`;
+        
+                // Redirect to the same page with the search query in the URL
+                window.location.href = `/admin/bookings${queryString}`;
+            } else {
+                window.location.href = `/admin/bookings`;
+            }
+        });
+
+    </script>
+</body>
+</html>
