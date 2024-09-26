@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Edit Bookings</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-8">
+        <h1 class="text-3xl font-bold mb-6">Edit Booking</h1>
+        <form action="/admin/bookings/edit/<%= booking._id %>" method="POST">
+            <!-- Flight Selection -->
+            <div class="mb-6">
+                <label for="flight" class="block text-gray-700 font-bold mb-2">Flight</label>
+                <select name="flight" id="flight" class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600" onchange="updateFlightDate(this.value)">
+                    <% flights.forEach(flight => { %>
+                        <option value="<%= flight._id %>" data-departure-time="<%= flight.departureTime %>" <%= flight._id === booking.flight._id ? 'selected' : '' %>>
+                            <%= flight.flightNumber %> - <%= flight.departure %> to <%= flight.arrival %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+    
+            <!-- Booking Date (Auto-Updated based on flight) -->
+            <div class="mb-6">
+                <label for="bookingDate" class="block text-gray-700 font-bold mb-2">Booking Date</label>
+                <input type="datetime-local" name="bookingDate" id="bookingDate" value="<%= new Date(booking.bookingDate).toISOString().slice(0,16) %>" class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+            </div>
+    
+            <!-- Quantity -->
+            <div class="mb-6">
+                <label for="quantity" class="block text-gray-700 font-bold mb-2">Number of Travelers</label>
+                <input type="number" name="quantity" id="quantity" value="<%= booking.quantity %>" min="1" class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+            </div>
+    
+            <!-- Phone Number -->
+            <div class="mb-6">
+                <label for="phone" class="block text-gray-700 font-bold mb-2">Contact Phone Number</label>
+                <input type="tel" name="phone" id="phone" value="<%= booking.phone %>" pattern="[0-9]{10}" class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Enter 10-digit phone number">
+            </div>
+    
+            <!-- Save Button -->
+            <div class="flex items-center justify-between">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    Save Changes
+                </button>
+                <a href="/admin/bookings" class="text-gray-600 hover:text-gray-900 underline">Cancel</a>
+            </div>
+        </form>
+    </div>
+    
+    <!-- JavaScript for Dynamic Flight Date Update -->
+    <script>
+        // Function to update booking date based on selected flight
+        function updateFlightDate(flightId) {
+            const selectedFlight = document.querySelector(`option[value="${flightId}"]`);
+            const departureTime = selectedFlight.getAttribute('data-departure-time');
+    
+            if (departureTime) {
+                const bookingDateInput = document.getElementById('bookingDate');
+                const formattedDate = new Date(departureTime).toISOString().slice(0, 16); // Format date for datetime-local input
+                bookingDateInput.value = formattedDate;
+            }
+        }
+    </script>
+    
+
+
+</body>
+</html>    

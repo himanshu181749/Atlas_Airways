@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const crypto = require('crypto');
+const TMClient = require('textmagic-rest-client');
 
 const router = express.Router();
 const Flight = require('../models/Flight.js');
@@ -188,6 +189,11 @@ router.post('/book/:id', async (req, res) => {
     await booking.save();
     await booking.populate('flight');
     await booking.populate('user');
+
+    // var c = new TMClient('username', 'C7XDKZOQZo6HvhJwtUw0MBcslfqwtp4');
+    // c.Messages.send({text: 'test message from server', phones:'7992423198'}, function(err, res){
+    //     console.log('Messages.send()', err, res);
+    // });
 
     // res.status(201).json({ message: `Flight ${flight._id} booked successfully for ${quantity} travelers`, bookingId: booking._id });
     res.render("bookingConfirmation.ejs", { booking });

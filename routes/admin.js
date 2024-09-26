@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require('mongoose');
 const router = express.Router();
 const Flight = require("../models/Flight");
 const User = require("../models/User.js");
@@ -7,6 +8,8 @@ const adminAuth = require("../middlewares/authMiddleware");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const Booking = require('../models/Booking');
+
 
 router.use(cookieParser()); // Ensure cookies are parsed correctly
 
@@ -47,6 +50,12 @@ router.post("/login", async (req, res) => {
       .json({ message: "Something went wrong", error: error.message });
   }
 });
+
+router.get('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/');
+});
+
 
 // Protect all routes below with adminAuth middleware
 router.use(adminAuth); // Apply protection from this point on
@@ -163,7 +172,6 @@ router.post("/flights/edit/:id", async (req, res) => {
   }
 });
 
-// Delete a flight (Admin-only route)
 // Delete a flight (Admin Only)
 router.post('/flights/delete/:id', adminAuth, async (req, res) => {
   try {
@@ -175,12 +183,110 @@ router.post('/flights/delete/:id', adminAuth, async (req, res) => {
   }
 });
 
+// Get all bookings
+router.get('/bookings', async (req, res) => {
+  const { search } = req.query;
+
+    let filter = {};
 
 
-router.get('/logout', (req, res) => {
-  res.clearCookie('token');
-  res.redirect('/');
+    if (search) {
+      // Create an array to hold individual filter conditions
+      let searchConditions = [];
+
+      // If search is a valid MongoDB ObjectId, add it as a filter for Booking ID
+      if (mongoose.Types.ObjectId.isValid(search)) {
+          searchConditions.push({ _id: new mongoose.Types.ObjectId(search) });
+      }
+
+      // Add filter for travelers' names using a case-insensitive regex
+      searchConditions.push({ travelers: { $regex: search, $options: 'i' } });
+
+      // Add filter for flight number using case-insensitive regex
+      searchConditions.push({ 'flight.flightNumber': { $regex: search, $options: 'i' } });
+
+      // Combine the conditions using $or
+      filter = { $or: searchConditions };
+  }
+
+  try {
+      const bookings = await Booking.find(filter).populate('user').populate('flight'); // Populate user and flight details
+      res.render("adminBookings.ejs", { bookings });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
 });
+
+// Get booking details for editing (GET request)
+router.get('/bookings/edit/:id', async (req, res) => {
+  try {
+      const booking = await Booking.findById(req.params.id).populate('flight'); // Fetch booking with flight details
+      const flights = await Flight.find(); // Fetch all available flights
+
+      if (!booking) return res.status(404).json({ message: 'Booking not found' });
+
+      res.render("adminEditBookings.ejs", { booking, flights }); // Pass booking and flights to the form
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+// Edit booking (POST request)
+router.post('/bookings/edit/:id', async (req, res) => {
+  try {
+      const booking = await Booking.findById(req.params.id);
+      if (!booking) return res.status(404).json({ message: 'Booking not found' });
+
+      // Update the booking details with values from the form
+      booking.flight = req.body.flight || booking.flight;
+      booking.bookingDate = req.body.bookingDate || booking.bookingDate;
+      booking.quantity = req.body.quantity || booking.quantity;
+      booking.phone = req.body.phone || booking.phone;
+
+      // Save the updated booking
+      await booking.save();
+
+      // req.flash('success', 'Booking updated successfully');
+      res.redirect('/admin/bookings');
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+
+// Cancel booking
+router.post('/bookings/cancel/:id', async (req, res) => {
+  try {
+      const booking = await Booking.findById(req.params.id);
+      if (!booking) return res.status(404).json({ message: 'Booking not found' });
+
+      // Update the flight's available seats
+      const flight = await Flight.findById(booking.flight);
+      if (flight) {
+          flight.availableSeats += booking.quantity;
+          await flight.save();
+      }
+
+      await Booking.findByIdAndDelete(req.params.id);
+      // req.flash('success', 'Booking cancelled successfully');
+      res.status(303).redirect('/admin/bookings');
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+
+// fetching all the users
+router.get("/users", adminAuth, async (req, res) => {
+  try {
+    const users = await User.find();
+    res.render("adminUsers.ejs", { users });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
 
 
 

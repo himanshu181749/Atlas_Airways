@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const session = require('express-session'); // Import the session middleware
 
 // importing gemini ai --------------------------------------------------------
 const { GoogleGenerativeAI } = require('@google/generative-ai');
@@ -53,6 +54,17 @@ mongoose.connect(process.env.MONGO_URI)
 .catch(err => console.error('Error connecting to MongoDB:', err));
 
 
+// Initialize session middleware with configuration
+app.use(session({
+  secret: process.env.JWT_SECRET, // Replace with a secret key for signing the session ID cookie
+  resave: false,           // Prevents session being saved if it wasn't modified
+  saveUninitialized: true, // Forces uninitialized sessions to be saved
+  cookie: {
+    secure: false,         // Set to true if you are using HTTPS, false for development
+    maxAge: 1000 * 60 * 60 // Sets cookie expiration (e.g., 1 hour)
+  }
+}));
+
 
 
 // parsers----------------------------------------------------------------
@@ -93,6 +105,21 @@ app.get('/', async (req, res) => {
     res.render('home.ejs', { user: user });
     // res.render("signup.ejs")
 })
+
+app.get('/session-example', (req, res) => {
+  // Example: Setting a session variable
+  req.session.user = 'testUser';
+  res.send('Session set for user: ' + req.session.user);
+});
+
+// Example: Accessing the session variable
+app.get('/check-session', (req, res) => {
+  if (req.session.user) {
+    res.send('Session for user: ' + req.session.user);
+  } else {
+    res.send('No session found');
+  }
+});
 
 
 app.post("/itinerary/generate", async function(req, res) {
